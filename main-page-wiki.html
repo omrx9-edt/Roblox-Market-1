@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roblox Product Store</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Roblox Store</p>
+        <h1>Buy Roblox items and get fast support</h1>
+        <p class="subtitle">Choose one of the products below, fill the order form, and you will be ready to send the order details.</p>
+      </div>
+    </header>
+
+    <section class="products" aria-label="Available products">
+      <h2>Available Products</h2>
+      <div class="product-list">
+        <article class="product-card">
+          <h3>All Types of Materials</h3>
+          <p>Get a wide range of materials for your builds and projects.</p>
+          <span class="product-price">Best seller</span>
+        </article>
+        <article class="product-card">
+          <h3>Limited Item Trade</h3>
+          <p>Request a specific limited item and get a fast quote.</p>
+          <span class="product-price">Popular</span>
+        </article>
+        <article class="product-card">
+          <h3>High Quality Builds</h3>
+          <p>Order premium-quality builds made with care and detail.</p>
+          <span class="product-price">New</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="order-section">
+      <div class="order-card">
+        <h2>Place Your Order</h2>
+        <p>Fill the form below with your Roblox and Discord username and the product you want.</p>
+        <form id="orderForm">
+          <label for="robloxUsername">What is your Roblox username?</label>
+          <input type="text" id="robloxUsername" name="robloxUsername" placeholder="Your Roblox username" required>
+
+          <label for="discordUsername">What is your Discord username?</label>
+          <input type="text" id="discordUsername" name="discordUsername" placeholder="Your Discord username" required>
+
+          <label>Is this item related to which game?</label>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" id="oaklands" name="gameChoice" value="Oaklands" required>
+              <span>Oaklands</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" id="lumberTycoon" name="gameChoice" value="Lumber Tycoon 2">
+              <span>Lumber Tycoon 2</span>
+            </label>
+          </div>
+
+          <label for="productRequest">What product are you looking to buy?</label>
+          <textarea id="productRequest" name="productRequest" placeholder="Describe the product you want" rows="4" required></textarea>
+
+          <div class="button-row">
+            <button type="submit">Submit Order</button>
+            <button type="button" id="copyEmailBtn" class="secondary-button">Copy Email</button>
+          </div>
+          <p class="note">After you submit, your email app may open. If it does not, you can copy the email address below and send the details manually.</p>
+          <p class="note"><strong>omrx9.227@gmail.com</strong></p>
+          <p class="note">This page uses a normal email notification flow instead of automatic sending.</p>
+        </form>
+        <div id="formMessage" class="form-message" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>Tip: Update the email address in the code to your real email so you receive every order.</p>
+    </footer>
+  </div>
+
+  <script>
+    const orderForm = document.getElementById('orderForm');
+    const formMessage = document.getElementById('formMessage');
+    const copyEmailBtn = document.getElementById('copyEmailBtn');
+    const emailAddress = 'omrx9.227@gmail.com';
+
+    function setFormMessage(text, type) {
+      formMessage.textContent = text;
+      formMessage.classList.remove('error', 'success');
+      formMessage.classList.add(type);
+    }
+
+    orderForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+      const robloxUsername = document.getElementById('robloxUsername').value.trim();
+      const discordUsername = document.getElementById('discordUsername').value.trim();
+      const gameChoice = document.querySelector('input[name="gameChoice"]:checked');
+      const productRequest = document.getElementById('productRequest').value.trim();
+
+      if (!robloxUsername || !discordUsername || !gameChoice || !productRequest) {
+        setFormMessage('Please fill in all fields before submitting.', 'error');
+        return;
+      }
+
+      const subject = encodeURIComponent('New order request from ' + robloxUsername);
+      const body = encodeURIComponent(
+        'Roblox username: ' + robloxUsername + '\n' +
+        'Discord username: ' + discordUsername + '\n' +
+        'Game: ' + gameChoice.value + '\n' +
+        'Product request: ' + productRequest + '\n\n' +
+        'Send this order to the seller and wait for confirmation.'
+      );
+
+      const mailtoLink = 'mailto:' + emailAddress + '?subject=' + subject + '&body=' + body;
+      window.location.href = mailtoLink;
+      setFormMessage('Your order details are ready. If your mail app does not open, use the copy email button and send the message manually.', 'success');
+    });
+
+    copyEmailBtn.addEventListener('click', function() {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(emailAddress).then(function() {
+          setFormMessage('Email address copied. You can paste it into your mail app.', 'success');
+        }).catch(function() {
+          setFormMessage('Copy failed. Please copy the email address manually.', 'error');
+        });
+      } else {
+        const tempInput = document.createElement('input');
+        tempInput.value = emailAddress;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+        setFormMessage('Email address copied. You can paste it into your mail app.', 'success');
+      }
+    });
+  </script>
+</body>
+</html>
